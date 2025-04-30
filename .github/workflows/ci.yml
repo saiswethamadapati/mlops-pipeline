@@ -1,0 +1,31 @@
+# .github/workflows/ci.yml
+
+name: CI
+
+on:
+  push:
+    branches: [ main ]
+
+jobs:
+  load-model:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Setup Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.x'
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+
+      - name: Sanity check: load model.pkl
+        run: |
+          python - <<EOF
+          import joblib
+          joblib.load('model.pkl')
+          print("✅ model.pkl loaded successfully")
+          EOF
